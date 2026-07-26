@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+contract FixedAllowanceVault {
+    error InsufficientBalance();
+    error InsufficientAllowance();
+    error UnsafeAllowanceUpdate();
+    error TransferFailed();
+
+    mapping(address owner => uint256 amount) public balances;
+    mapping(address owner => mapping(address spender => uint256 amount)) public allowances;
+
+    function deposit() external payable {
+        balances[msg.sender] += msg.value;
+    }
+
+    function approve(address spender, uint256 amount) external {
+        uint256 current = allowances[msg.sender][spender];
+        if (current != 0 && amount != 0) revert UnsafeAllowanceUpdate();
+        allowances[msg.sender][spender] = amount;
+    }
+
+    function spendFrom(address owner, address payable recipient, uint256 amount) external {
+        if (balances[owner] < amount) revert InsufficientBalance();
+        if (allowances[owner][msg.sender] < amount) revert InsufficientAllowance();
+
+        balances[owner] -= amount;
+        allowances[owner][msg.sender] -= amount;
+
+        (bool ok,) = recipient.call{value: amount}("");
+        if (!ok) revert TransferFailed();
+    }
+}
