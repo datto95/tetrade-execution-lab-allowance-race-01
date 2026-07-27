@@ -18,6 +18,13 @@ This lab demonstrates the classic allowance race condition:
 - test/AllowanceRaceExploit.t.sol: exploit, fix, negative control, and fuzz tests.
 - scripts/generate_evidence.py: reproducible JSON evidence generation and schema check.
 
+## Didactic docs
+
+- `docs/GUIA_ALUNO.md`
+- `docs/GUIA_INSTRUTOR.md`
+- `docs/CHECKLIST_AUDITORIA.md`
+- `docs/ROTEIRO.md`
+
 ## Prerequisites
 
 - Foundry installed (forge --version)
